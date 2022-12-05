@@ -38,7 +38,7 @@ async function FirstOpen() {
   $(".itemCategory").click(function (e) {
     let nameOfTheMeal = e.target.innerText;
 
-    let details
+    let details;
     async function getDetails(nameOfTheMeal) {
       let apiRespose = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${nameOfTheMeal}`);
       let finalResult = await apiRespose.json();
