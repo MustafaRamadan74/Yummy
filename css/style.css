@@ -29,6 +29,15 @@ body {
     cursor: pointer;
 }
 
+@media screen and (min-width: 320px) and (max-width: 768px) {
+    .sideBar {
+        position: relative;
+        width: 70%;
+        left: -28%;
+        z-index: 9999;
+    }
+}
+
 .desc {
     background-color: rgba(255, 255, 255, 0.5);
     width: 100%;
@@ -39,7 +48,7 @@ body {
     transition: top 0.7s;
 }
 
-.itemCategory:hover .desc{
+.itemCategory:hover .desc {
     top: 0;
 }
 

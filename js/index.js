@@ -10,16 +10,11 @@ function hideSideBar() {
       $(".sideBar").animate({ left: `-${boxWidth}` }, 500);
     }
     else {
-      $(".sideBar").animate({ left: `0px` }, 500, function () {
-
-      });
-
+      $(".sideBar").animate({ left: `0px` }, 500);
     }
   })
 }
-
 hideSideBar();
-
 
 async function FirstOpen() {
   let apiRespose = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?a=egyptian`);
@@ -40,38 +35,37 @@ async function FirstOpen() {
   }
   document.getElementById("dispCat").innerHTML = hasala;
 
-  // $(".itemCategory").click(function (e) {
-  //   let nameOfTheMeal = e.target.innerHTML
+  $(".itemCategory").click(function (e) {
+    let nameOfTheMeal = e.target.innerText;
 
-  //   async function getDetails() {
-  //     let apiRespose = await fetch(`www.themealdb.com/api/json/v1/1/search.php?s=${nameOfTheMeal}`);
-  //     let finalResult = await apiRespose.json();
-  //     let details = finalResult.meals;
-  //   }
+    let details
+    async function getDetails(nameOfTheMeal) {
+      let apiRespose = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${nameOfTheMeal}`);
+      let finalResult = await apiRespose.json();
+      details = finalResult.meals;
 
-  //   let hasala = ``;
-  //   for (let i = 0; i < details.length; i++) {
-
-  //     hasala += `<div class="col-md-3 my-3 py-3 px-4">
-  //   <div class="itemCategory position-relative text-center">
-  //       <img class=" img-fluid" src="${details[i].strMealThumb}" alt="">
-  //       <div class=" desc px-2 py-3 d-flex flex-column justify-content-center align-items-center">
-  //           <h3>${details[i].strMeal}</h3>
-  //       </div>
-  //   </div>
-  //   </div>`
-  //   }
-
-  //   document.getElementById("dispCat").innerHTML = hasala;
-
-
-
-  // })
-  // getDetails()
-
+      let hasala = `<div class="col-md-5 my-3 py-3 px-4">
+      <div class="itemCategory position-relative text-center">
+          <img class=" img-fluid" src="${details[0].strMealThumb}"
+              alt="">
+          <div class=" desc px-2 py-3 d-flex flex-column justify-content-center align-items-center">
+              <h3>${details[0].strMeal}</h3>
+          </div>
+      </div>
+  </div>
+  <div class="col-md-6 my-y py-3 px-4">
+      <h2 class=" text-light">${details[0].strMeal}</h2>
+      <h3 class=" text-light">'${details[0].strArea} Meal'</h3>
+      <p class=" text-light">Instruction : ${details[0].strInstructions}</p>
+      <h5 class="text-info">Mean Ingredients : ${details[0].strIngredient1}, ${details[0].strIngredient2}, ${details[0].strIngredient3}, ${details[0].strIngredient4}, ${details[0].strIngredient5}, ${details[0].strIngredient6}, ${details[0].strIngredient7}, ${details[0].strIngredient8}, ${details[0].strIngredient9}, ${details[0].strIngredient10}</h5>
+      <a href="${details[0].strYoutube}"><button class="btn btn-outline-danger my-3">Watch Video</button><a/>
+  </div>`;
+      document.getElementById("dispCat").innerHTML = hasala;
+    }
+    getDetails(nameOfTheMeal)
+  })
 }
 FirstOpen()
-
 
 // =========================== get category ================================
 
@@ -84,7 +78,6 @@ async function getCat() {
 }
 
 getCat();
-
 
 $("#Categories").click(function () {
 
@@ -101,22 +94,76 @@ $("#Categories").click(function () {
   let hasala = ``;
   for (let i = 0; i < category.length; i++) {
 
-    let description = category[i].strCategoryDescription.split(" ").splice(0, 20).join(" ")
+    let description = category[i].strCategoryDescription.split(" ").splice(0, 10).join(" ")
 
-    hasala += `<div class="col-md-3 my-3 py-3 px-4">
+    hasala += `<div id="catAttr" class="col-md-4 col-lg-3 my-3 py-3 px-4 ">
     <div class="itemCategory position-relative text-center">
         <img class=" img-fluid" src="${category[i].strCategoryThumb}" alt="">
         <div class=" desc px-2 py-3 d-flex flex-column justify-content-center align-items-center">
             <h3>${category[i].strCategory}</h3>
-            <p>${description}</p>
+            <p>${category[i].strCategory} ,${description}</p>
         </div>
     </div>
   </div>`
   }
-  document.getElementById("dispCat").innerHTML = hasala;
-}
-)
 
+  document.getElementById("dispCat").innerHTML = hasala;
+
+  $(".itemCategory").click(function (e) {
+    let nameOfCat = e.target.innerText.split(" ")[0];
+
+    let details
+    async function getDetails(nameOfCat) {
+      let apiRespose = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${nameOfCat}`);
+      let finalResult = await apiRespose.json();
+      details = finalResult.meals;
+
+      let hasala = ``;
+      for (let i = 0; i < details.length; i++) {
+        hasala += `<div id="catAttr" class="col-md-3 my-3 py-3 px-4 ">
+    <div class="itemCategory position-relative text-center">
+        <img class=" img-fluid" src="${details[i].strMealThumb}" alt="">
+        <div class=" desc px-2 py-3 d-flex flex-column justify-content-center align-items-center">
+            <h3>${details[i].strMeal}</h3>
+        </div>
+    </div>
+  </div>`
+      };
+      document.getElementById("dispCat").innerHTML = hasala;
+
+      $(".itemCategory").click(function (e) {
+        let nameOfTheMeal = e.target.innerText;
+
+        let details
+        async function getDetails(nameOfTheMeal) {
+          let apiRespose = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${nameOfTheMeal}`);
+          let finalResult = await apiRespose.json();
+          details = finalResult.meals;
+
+          let hasala = `<div class="col-md-5 my-3 py-3 px-4">
+          <div class="itemCategory position-relative text-center">
+              <img class=" img-fluid" src="${details[0].strMealThumb}"
+                  alt="">
+              <div class=" desc px-2 py-3 d-flex flex-column justify-content-center align-items-center">
+                  <h3>${details[0].strMeal}</h3>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-6 my-y py-3 px-4">
+          <h2 class=" text-light">${details[0].strMeal}</h2>
+          <h3 class=" text-light">'${details[0].strArea} Meal'</h3>
+          <p class=" text-light">Instruction : ${details[0].strInstructions}</p>
+          <h5 class="text-info">Mean Ingredients : ${details[0].strIngredient1}, ${details[0].strIngredient2}, ${details[0].strIngredient3}, ${details[0].strIngredient4}, ${details[0].strIngredient5}, ${details[0].strIngredient6}, ${details[0].strIngredient7}, ${details[0].strIngredient8}, ${details[0].strIngredient9}, ${details[0].strIngredient10}</h5>
+          <a href="${details[0].strYoutube}"><button class="btn btn-outline-danger my-3">Watch Video</button><a/>
+      </div>`;
+          document.getElementById("dispCat").innerHTML = hasala;
+        }
+        getDetails(nameOfTheMeal)
+      })
+    }
+    getDetails(nameOfCat)
+  })
+})
 
 // =========================== get area ================================
 
@@ -127,7 +174,6 @@ async function getArea() {
 }
 
 getArea();
-
 
 $("#Area").click(function () {
 
@@ -154,6 +200,63 @@ $("#Area").click(function () {
   </div>`
   }
   document.getElementById("dispCat").innerHTML = hasala;
+
+  $(".itemCategory").click(function (e) {
+    let nameOfTheMeal = e.target.innerText;
+
+    let details
+    async function getDetails(nameOfTheMeal) {
+      let apiRespose = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${nameOfTheMeal}`);
+      let finalResult = await apiRespose.json();
+      details = finalResult.meals;
+
+      let hasala = ``
+      for (let i = 0; i < details.length; i++) {
+        hasala += `<div class="col-md-3 my-3 py-3 px-4">
+      <div class="itemCategory position-relative text-center">
+          <img class=" img-fluid" src="${details[i].strMealThumb}" alt="">
+          <div class=" desc px-2 py-3 d-flex flex-column justify-content-center align-items-center">
+              <h3>${details[i].strMeal}</h3>
+          </div>
+      </div>
+      </div>`;
+      }
+      document.getElementById("dispCat").innerHTML = hasala;
+
+      $(".itemCategory").click(function (e) {
+        let nameOfTheMeal = e.target.innerText;
+
+        let details
+        async function getDetails(nameOfTheMeal) {
+          let apiRespose = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${nameOfTheMeal}`);
+          let finalResult = await apiRespose.json();
+          details = finalResult.meals;
+
+          let hasala = `<div class="col-md-5 my-3 py-3 px-4">
+          <div class="itemCategory position-relative text-center">
+              <img class=" img-fluid" src="${details[0].strMealThumb}"
+                  alt="">
+              <div class=" desc px-2 py-3 d-flex flex-column justify-content-center align-items-center">
+                  <h3>${details[0].strMeal}</h3>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-6 my-y py-3 px-4">
+          <h2 class=" text-light">${details[0].strMeal}</h2>
+          <h3 class=" text-light">'${details[0].strArea} Meal'</h3>
+          <p class=" text-light">Instruction : ${details[0].strInstructions}</p>
+          <h5 class="text-info">Mean Ingredients : ${details[0].strIngredient1}, ${details[0].strIngredient2}, ${details[0].strIngredient3}, ${details[0].strIngredient4}, ${details[0].strIngredient5}, ${details[0].strIngredient6}, ${details[0].strIngredient7}, ${details[0].strIngredient8}, ${details[0].strIngredient9}, ${details[0].strIngredient10}</h5>
+          <a href="${details[0].strYoutube}"><button class="btn btn-outline-danger my-3">Watch Video</button><a/>
+      </div>`;
+          document.getElementById("dispCat").innerHTML = hasala;
+        }
+        getDetails(nameOfTheMeal)
+      })
+    }
+    getDetails(nameOfTheMeal);
+
+  })
+
 }
 )
 
@@ -202,41 +305,65 @@ $("#Ingredient").click(function () {
   }
   document.getElementById("dispCat").innerHTML = hasala;
 
-  // getIngredientFilter();
+  $(".itemCategory").click(function (e) {
+    let nameOfTheMeal = e.target.innerText;
 
+    let details
+    async function getDetails(nameOfTheMeal) {
+      let apiRespose = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${nameOfTheMeal}`);
+      let finalResult = await apiRespose.json();
+      details = finalResult.meals;
+
+      let hasala = ``
+      for (let i = 0; i < details.length; i++) {
+        hasala += `<div class="col-md-3 my-3 py-3 px-4">
+      <div class="itemCategory position-relative text-center">
+          <img class=" img-fluid" src="${details[i].strMealThumb}" alt="">
+          <div class=" desc px-2 py-3 d-flex flex-column justify-content-center align-items-center">
+              <h3>${details[i].strMeal}</h3>
+          </div>
+      </div>
+      </div>`;
+      }
+      document.getElementById("dispCat").innerHTML = hasala;
+
+      $(".itemCategory").click(function (e) {
+        let nameOfTheMeal = e.target.innerText;
+
+        let details
+        async function getDetails(nameOfTheMeal) {
+          let apiRespose = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${nameOfTheMeal}`);
+          let finalResult = await apiRespose.json();
+          details = finalResult.meals;
+
+          let hasala = `<div class="col-md-5 my-3 py-3 px-4">
+          <div class="itemCategory position-relative text-center">
+              <img class=" img-fluid" src="${details[0].strMealThumb}"
+                  alt="">
+              <div class=" desc px-2 py-3 d-flex flex-column justify-content-center align-items-center">
+                  <h3>${details[0].strMeal}</h3>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-6 my-y py-3 px-4">
+          <h2 class=" text-light">${details[0].strMeal}</h2>
+          <h3 class=" text-light">'${details[0].strArea} Meal'</h3>
+          <p class=" text-light">Instruction : ${details[0].strInstructions}</p>
+          <h5 class="text-info">Mean Ingredients : ${details[0].strIngredient1}, ${details[0].strIngredient2}, ${details[0].strIngredient3}, ${details[0].strIngredient4}, ${details[0].strIngredient5}, ${details[0].strIngredient6}, ${details[0].strIngredient7}, ${details[0].strIngredient8}, ${details[0].strIngredient9}, ${details[0].strIngredient10}</h5>
+          <a href="${details[0].strYoutube}"><button class="btn btn-outline-danger my-3">Watch Video</button><a/>
+      </div>`;
+          document.getElementById("dispCat").innerHTML = hasala;
+        }
+        getDetails(nameOfTheMeal)
+      })
+    }
+    getDetails(nameOfTheMeal);
+
+  })
 
 })
 
-// async function getIngredientFilter() {
-
-//   let apiRespose = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=salmon`);
-//   let finalResult = await apiRespose.json();
-//   IngredientsFilter = finalResult.meals;
-
-//   // let itemList = document.querySelectorAll(".itemCategory");
-//   let hasala = ``;
-//   for (let i = 0; IngredientsFilter.length; i++) {
-
-//       hasala += `<div class="col-md-3 my-3 py-3 px-4">
-//     <div class="itemCategory position-relative text-center">
-//         <img class=" img-fluid" src="${IngredientsFilter[i].strMealThumb}" alt="">
-//         <div class=" desc px-2 py-3 d-flex flex-column justify-content-center align-items-center">
-//             <h3>${IngredientsFilter[i].strMeal}</h3>
-//         </div>
-//     </div>
-//   </div>`
-//       document.getElementById("test").innerHTML = hasala;
-//     }
-// }
-
-
-
-
-
-
-
 // ======================= search ========================
-
 
 $("#Search").click(function () {
 
@@ -252,18 +379,13 @@ $("#Search").click(function () {
   document.getElementById("dispCat").innerHTML = ``;
   document.getElementById("contact").innerHTML = ``;
 
-
   let hasala = ``;
   hasala += `<div class="search d-flex justify-content-evenly">
   <input id="sName" onkeyup="searchName()" class=" sName py-2 text-center text-muted" type="text" placeholder=" Search By Name">
   <input id="sFirstLetter" onkeyup="searchFL()" class=" sFirstLetter py-2 text-center text-muted" type="text" placeholder=" Search By First Letter">
 </div>`
-
-
   document.getElementById("searchSection").innerHTML = hasala;
-
 })
-
 
 async function searchFL() {
   let firstLetter = document.getElementById("sFirstLetter").value;
@@ -271,7 +393,6 @@ async function searchFL() {
   let finalResult = await apiRespose.json();
   let sName = finalResult.meals;
 
-
   let hasala = ``;
   for (let i = 0; i < sName.length; i++) {
 
@@ -286,10 +407,36 @@ async function searchFL() {
   }
   document.getElementById("dispCat").innerHTML = hasala;
 
+  $(".itemCategory").click(function (e) {
+    let nameOfTheMeal = e.target.innerText;
+
+    let details
+    async function getDetails(nameOfTheMeal) {
+      let apiRespose = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${nameOfTheMeal}`);
+      let finalResult = await apiRespose.json();
+      details = finalResult.meals;
+
+      let hasala = `<div class="col-md-5 my-3 py-3 px-4">
+      <div class="itemCategory position-relative text-center">
+          <img class=" img-fluid" src="${details[0].strMealThumb}"
+              alt="">
+          <div class=" desc px-2 py-3 d-flex flex-column justify-content-center align-items-center">
+              <h3>${details[0].strMeal}</h3>
+          </div>
+      </div>
+  </div>
+  <div class="col-md-6 my-y py-3 px-4">
+      <h2 class=" text-light">${details[0].strMeal}</h2>
+      <h3 class=" text-light">'${details[0].strArea} Meal'</h3>
+      <p class=" text-light">Instruction : ${details[0].strInstructions}</p>
+      <h5 class="text-info">Mean Ingredients : ${details[0].strIngredient1}, ${details[0].strIngredient2}, ${details[0].strIngredient3}, ${details[0].strIngredient4}, ${details[0].strIngredient5}, ${details[0].strIngredient6}, ${details[0].strIngredient7}, ${details[0].strIngredient8}, ${details[0].strIngredient9}, ${details[0].strIngredient10}</h5>
+      <a href="${details[0].strYoutube}"><button class="btn btn-outline-danger my-3">Watch Video</button><a/>
+  </div>`;
+      document.getElementById("dispCat").innerHTML = hasala;
+    }
+    getDetails(nameOfTheMeal)
+  })
 }
-
-// searchFL();
-
 
 async function searchName() {
   let mealName = document.getElementById("sName").value;
@@ -297,7 +444,6 @@ async function searchName() {
   let finalResult = await apiRespose.json();
   let sName = finalResult.meals;
 
-
   let hasala = ``;
   for (let i = 0; i < sName.length; i++) {
 
@@ -312,15 +458,38 @@ async function searchName() {
   }
   document.getElementById("dispCat").innerHTML = hasala;
 
+  $(".itemCategory").click(function (e) {
+    let nameOfTheMeal = e.target.innerText;
+
+    let details
+    async function getDetails(nameOfTheMeal) {
+      let apiRespose = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${nameOfTheMeal}`);
+      let finalResult = await apiRespose.json();
+      details = finalResult.meals;
+
+      let hasala = `<div class="col-md-5 my-3 py-3 px-4">
+      <div class="itemCategory position-relative text-center">
+          <img class=" img-fluid" src="${details[0].strMealThumb}"
+              alt="">
+          <div class=" desc px-2 py-3 d-flex flex-column justify-content-center align-items-center">
+              <h3>${details[0].strMeal}</h3>
+          </div>
+      </div>
+  </div>
+  <div class="col-md-6 my-y py-3 px-4">
+      <h2 class=" text-light">${details[0].strMeal}</h2>
+      <h3 class=" text-light">'${details[0].strArea} Meal'</h3>
+      <p class=" text-light">Instruction : ${details[0].strInstructions}</p>
+      <h5 class="text-info">Mean Ingredients : ${details[0].strIngredient1}, ${details[0].strIngredient2}, ${details[0].strIngredient3}, ${details[0].strIngredient4}, ${details[0].strIngredient5}, ${details[0].strIngredient6}, ${details[0].strIngredient7}, ${details[0].strIngredient8}, ${details[0].strIngredient9}, ${details[0].strIngredient10}</h5>
+      <a href="${details[0].strYoutube}"><button class="btn btn-outline-danger my-3">Watch Video</button><a/>
+  </div>`;
+      document.getElementById("dispCat").innerHTML = hasala;
+    }
+    getDetails(nameOfTheMeal)
+  })
 }
 
-// searchFL();
-
-
-
 // ====================== contact us =====================
-
-
 
 $("#ContactUs").click(function () {
 
@@ -335,7 +504,6 @@ $("#ContactUs").click(function () {
 
   document.getElementById("searchSection").innerHTML = ``;
   document.getElementById("dispCat").innerHTML = ``;
-
 
   let hasala = `<div class="container w-50">
   <h2 class=" text-center mb-5 text-light">Contact Us...</h2>
@@ -374,20 +542,14 @@ $("#ContactUs").click(function () {
   <div class="warning text-center text-warning mb-3"></div>
   <button id="btnContact" class=" btn btn-outline-danger " disabled >Submit</button>
 </div>`;
-
-
   document.getElementById("contact").innerHTML = hasala;
-
-
 
 })
 
 // ======================== validation ====================
 
-
-
-function validation(){
-  function validatEmail(){
+function validation() {
+  function validatEmail() {
     let emailContact = $("#emailContact").val();
     let regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
     if (regexEmail.test(emailContact) == true) {
@@ -397,7 +559,7 @@ function validation(){
       return false;
     }
   }
-  
+
   function validatPhone() {
     let phoneContact = $("#phoneContact").val();
     let regexPhone = /^(002)?01[0125][0-9]{8}$/;
@@ -408,8 +570,8 @@ function validation(){
       return false;
     }
   }
-  
-  function validatPassword(){
+
+  function validatPassword() {
     let passContact = $("#passContact").val();
     let regexPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
     if (regexPassword.test(passContact) == true) {
@@ -419,8 +581,8 @@ function validation(){
       return false;
     }
   }
-  
-  function validatRePassword(){
+
+  function validatRePassword() {
     let rePassContact = $("#rePassContact").val();
     let passContact = $("#passContact").val();
     if (rePassContact == passContact) {
@@ -431,51 +593,19 @@ function validation(){
     }
   }
 
-  if (validatEmail() == true && validatPhone() == true && validatPassword() == true && validatRePassword() == true ){
+  if (validatEmail() == true && validatPhone() == true && validatPassword() == true && validatRePassword() == true) {
     $("#btnContact").removeAttr("disabled");
   }
-  else if (validatEmail()==false){
+  else if (validatEmail() == false) {
     $(".warning").text("please enter a valid email email@exalple.com")
   }
-  else if (validatPhone()==false){
+  else if (validatPhone() == false) {
     $(".warning").text("please enter a valid egyption phone number ")
   }
-  else if (validatPassword()==false){
+  else if (validatPassword() == false) {
     $(".warning").text("please enter at least 8 charchter consists of at least 1 number")
   }
-  else if (validatRePassword()==false){
+  else if (validatRePassword() == false) {
     $(".warning").text("password doesn't match")
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* 3andy m4kla eny 3ayz a4gl function 3la 7aga htdaf fe el7sala
-w kman ageb el target mn 7aga htdaf fe el7sala
-w b3d ama ageb el target m4 3rf ast5dmo fe link el API
-
-w3ny elmoshkla 3ndy fe el         sequence  ????????????????????????????????????????????????????????????
-*/
