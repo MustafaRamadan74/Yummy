@@ -36,6 +36,9 @@ body {
         left: -28%;
         z-index: 9999;
     }
+    .container {
+        width: 70%;
+    }
 }
 
 .desc {
